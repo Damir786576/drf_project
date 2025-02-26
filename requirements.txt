@@ -5,3 +5,4 @@ python-dotenv==1.0.1
 pillow==11.1.0
 black==25.1.0
 dotenv~=0.9.9
+djangorestframework_simplejwt==5.4.0
