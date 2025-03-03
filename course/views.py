@@ -32,6 +32,7 @@ class LessonsViewSet(ModelViewSet):
 class LessonsCreateApiView(CreateAPIView):
     queryset = Lessons.objects.all()
     serializer_class = LessonsSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class LessonsListAPIView(ListAPIView):

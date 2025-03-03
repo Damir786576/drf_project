@@ -1,9 +1,10 @@
 from rest_framework import viewsets, generics, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from users.models import Payments, User
+from users.permissions import IsOwner
 from users.serializer import PaymentsSerializers, UserSerializer
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 
 
 class PaymentsViewSet(viewsets.ModelViewSet):
@@ -12,10 +13,6 @@ class PaymentsViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.OrderingFilter]
     filterset_fields = ['paid_course', 'separately_paid_lesson', 'payment_method']
     ordering_fields = ['payment_date']
-
-
-class UserCreateAPIView(generics.CreateAPIView):
-    serializer_class = UserSerializer
 
 
 class UserCreateApiView(CreateAPIView):
@@ -27,3 +24,21 @@ class UserCreateApiView(CreateAPIView):
         user = serializer.save(is_active=True)
         user.set_password(user.password)
         user.save()
+
+
+class UserRetrieveAPIView(RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+
+class UserUpdateAPIView(UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+
+class UserDestroyAPIView(DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
