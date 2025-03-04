@@ -52,7 +52,6 @@ class CourseTestCase(APITestCase):
 
 
 class SubscriptionTestCase(APITestCase):
-
     def setUp(self):
         self.user = User.objects.create(email="user@example.com")
         self.course = Course.objects.create(title="Курс по Python")
