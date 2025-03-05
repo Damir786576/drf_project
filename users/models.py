@@ -1,9 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-from course.models import Course, Lessons
-
-
 class User(AbstractUser):
     username = None
     email = models.EmailField(
@@ -57,14 +53,14 @@ class Payments(models.Model):
         verbose_name="Дата оплаты"
     )
     paid_course = models.ForeignKey(
-        Course,
+        'course.Course',
         on_delete=models.CASCADE,
         related_name='course',
         verbose_name="Оплаченный курс",
         null=True, blank=True
     )
     separately_paid_lesson = models.ForeignKey(
-        Lessons,
+        'course.Lessons',
         on_delete=models.CASCADE,
         related_name='lesson',
         verbose_name="Оплаченный урок",

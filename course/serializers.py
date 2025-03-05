@@ -17,13 +17,12 @@ class LessonDetailSerializer(ModelSerializer):
         fields = ("name", "course", "count_lessons_with_same_course")
 
 
-class LessonsSerializer(ModelSerializer):
-    name = serializers.URLField(validators=[validate_youtube_link])
+class LessonsSerializer(serializers.ModelSerializer):
+    video_url = serializers.URLField(validators=[validate_youtube_link])
 
     class Meta:
         model = Lessons
         fields = "__all__"
-
 
 class CourseSerializer(serializers.ModelSerializer):
     lessons = LessonsSerializer(many=True, read_only=True)
