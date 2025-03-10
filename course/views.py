@@ -19,6 +19,7 @@ from course.serializers import CourseSerializer, LessonsSerializer
 from users.models import Payments
 from users.permissions import IsModer, IsOwner
 from users.services import create_stripe_session, create_stripe_price, create_stripe_product
+from .tasks import send_course_update_notification
 
 
 class CourseViewSet(ModelViewSet):
@@ -35,6 +36,17 @@ class CourseViewSet(ModelViewSet):
         return super().get_permissions()
 
     pagination_class = CustomPagination
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        send_course_update_notification.delay(instance.id)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class LessonsViewSet(ModelViewSet):
