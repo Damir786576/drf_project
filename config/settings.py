@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "course",
     'rest_framework_simplejwt',
     'drf_yasg',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -126,7 +127,6 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 REDIS_DB = os.getenv("REDIS_DB", 0)
@@ -140,7 +140,7 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_BEAT_SCHEDULE = {
     'deactivate-inactive-users-daily': {
-        'task': 'users.tasks.deactivate_inactive_users',
+        'task': 'course.tasks.deactivate_inactive_users',
         'schedule': crontab(hour=0, minute=0),
     },
 }
