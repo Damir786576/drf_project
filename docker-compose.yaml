@@ -21,11 +21,9 @@ services:
     image: postgres:15
     container_name: postgres_db
     environment:
-      - POSTGRES_USER=${USER}              # Используем USER вместо POSTGRES_USER
-      - POSTGRES_PASSWORD=${PASSWORD}       # Используем PASSWORD вместо POSTGRES_PASSWORD
-      - POSTGRES_DB=${NAME}                # Используем NAME вместо POSTGRES_DB
-      - POSTGRES_HOST=${HOST}              # Добавляем HOST, если нужен
-      - POSTGRES_PORT=${PORT}              # Добавляем PORT, если нужен
+      - POSTGRES_USER=${USER}
+      - POSTGRES_PASSWORD=${PASSWORD}
+      - POSTGRES_DB=${NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -34,7 +32,7 @@ services:
   redis:
     image: redis:7
     container_name: redis
-    command: redis-server --requirepass ${REDIS_PASSWORD:-default_redis_pass}  # Значение по умолчанию, если REDIS_PASSWORD нет
+    command: redis-server --requirepass ${REDIS_PASSWORD:-default_redis_pass}
     ports:
       - "6379:6379"
 
@@ -43,7 +41,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: celery_worker
-    command: celery -A myproject worker -l info
+    command: celery -A config worker -l info
     volumes:
       - .:/app
     env_file:
@@ -57,7 +55,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: celery_beat
-    command: celery -A myproject beat -l info
+    command: sh -c "sleep 10 && celery -A config beat -l info"
     volumes:
       - .:/app
     env_file:
