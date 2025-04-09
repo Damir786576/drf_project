@@ -3,6 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 from celery.schedules import crontab
 from dotenv import load_dotenv
+import sys
 
 load_dotenv()
 
@@ -71,15 +72,15 @@ REST_FRAMEWORK = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("NAME"),
-        "USER": os.getenv("USER"),
-        "PASSWORD": os.getenv("PASSWORD"),
-        "HOST": os.getenv("HOST"),
-        "PORT": os.getenv("PORT"),
+        "NAME": os.getenv("NAME", "drf"),
+        "USER": os.getenv("USER", "drf_user"),
+        "PASSWORD": os.getenv("PASSWORD", "drf_password"),
+        "HOST": os.getenv("HOST", "db"),
+        "PORT": os.getenv("PORT", "5432"),
     }
 }
 
-if 'test' in os.getenv('DJANGO_SETTINGS_MODULE', ''):
+if 'test' in sys.argv:
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': ':memory:',
